@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluasi Komprehensif Aplikasi Tokopedia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 80px 10px 20px 10px;
+        }
+
+        /* Navigation Styles */
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            border: 2px solid #42b549;
+            background: white;
+            color: #42b549;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #42b549;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 181, 73, 0.3);
+        }
+
+        .nav-btn.active {
+            background: #42b549;
+            color: white;
+        }
+
+        .slide {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #42b549 0%, #2d8a36 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #42b549;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #42b549;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-number {
+            background: #42b549;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .interface-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .usability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .usability-item {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #42b549;
+            transition: all 0.3s ease;
+        }
+
+        .usability-item:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateX(5px);
+        }
+
+        .usability-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .usability-title {
+            font-size: 1.3em;
+            color: #2d8a36;
+            font-weight: 600;
+        }
+
+        .score {
+            background: #42b549;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .strength-weakness {
+            margin-top: 15px;
+        }
+
+        .strength-weakness h4 {
+            color: #495057;
+            font-size: 1em;
+            margin-bottom: 8px;
+            margin-top: 12px;
+        }
+
+        .strength-weakness ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .strength-weakness li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .strength-weakness li::before {
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .strength-weakness .strength li::before {
+            content: "✓";
+            color: #28a745;
+        }
+
+        .strength-weakness .weakness li::before {
+            content: "✗";
+            color: #dc3545;
+        }
+
+        .interaction-styles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .interaction-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .interaction-item:hover {
+            transform: scale(1.05);
+        }
+
+        .interaction-item h4 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .improvement-cards {
+            display: grid;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .improvement-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            border-left: 6px solid #42b549;
+            transition: all 0.3s ease;
+        }
+
+        .improvement-card:hover {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .improvement-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .improvement-number {
+            background: linear-gradient(135deg, #42b549 0%, #2d8a36 100%);
+            color: white;
+            min-width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .improvement-title {
+            flex: 1;
+        }
+
+        .improvement-title h3 {
+            color: #2d8a36;
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+
+        .problem, .solution, .impact {
+            margin-top: 20px;
+        }
+
+        .problem h4, .solution h4, .impact h4 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .problem {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .solution {
+            background: #d1ecf1;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .solution ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .solution li {
+            padding: 8px 0 8px 30px;
+            position: relative;
+        }
+
+        .solution li::before {
+            content: "→";
+            position: absolute;
+            left: 10px;
+            color: #17a2b8;
+            font-weight: bold;
+        }
+
+        .impact {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+            font-weight: 500;
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .conclusion h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .average-score {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .average-score h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .average-score .score-display {
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        /* Team Members Styles */
+        .team-intro {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .team-intro h2 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .member-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(66, 181, 73, 0.2);
+            border-color: #42b549;
+        }
+
+        .member-avatar {
+            margin-bottom: 25px;
+        }
+
+        .avatar-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #42b549 0%, #2d8a36 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(66, 181, 73, 0.3);
+        }
+
+        .avatar-initial {
+            color: white;
+            font-size: 3.5em;
+            font-weight: bold;
+        }
+
+        .member-name {
+            font-size: 1.6em;
+            color: #2d8a36;
+            margin-bottom: 10px;
+        }
+
+        .member-id {
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .member-role {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .member-responsibility {
+            text-align: left;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .member-responsibility strong {
+            color: #42b549;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .member-responsibility ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .member-responsibility li {
+            padding: 5px 0 5px 25px;
+            position: relative;
+            color: #495057;
+        }
+
+        .member-responsibility li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #42b549;
+            font-weight: bold;
+        }
+
+        .team-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .project-info {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin: 40px 0;
+        }
+
+        .project-info h3 {
+            color: #2d8a36;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .info-item {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #42b549;
+        }
+
+        .info-item strong {
+            color: #2d8a36;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.05em;
+        }
+
+        .info-item p {
+            color: #495057;
+            margin: 0;
+        }
+
+        .contact-section {
+            background: linear-gradient(135deg, #42b549 0%, #2d8a36 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .contact-section h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+
+        .contact-info p {
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 70px 10px 20px 10px;
+            }
+
+            .navigation {
+                padding: 10px;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 25px 20px;
+            }
+
+            .section-title {
+                font-size: 1.4em;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .usability-grid,
+            .interface-cards,
+            .interaction-styles {
+                grid-template-columns: 1fr;
+            }
+
+            .improvement-header {
+                flex-direction: column;
+            }
+
+            .conclusion {
+                padding: 25px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .team-intro h2 {
+                font-size: 1.5em;
+            }
+
+            .avatar-circle {
+                width: 100px;
+                height: 100px;
+            }
+
+            .avatar-initial {
+                font-size: 2em;
+            }
+
+            .team-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 65px 5px 10px 5px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .header {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+
+            .usability-item,
+            .improvement-card {
+                padding: 20px;
+            }
+
+            .team-intro {
+                padding: 20px;
+            }
+
+            .team-intro h2 {
+                font-size: 1.3em;
+            }
+
+            .member-card {
+                padding: 20px;
+            }
+
+            .team-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-icon {
+                font-size: 2.5em;
+            }
+
+            .stat-number {
+                font-size: 2em;
+            }
+
+            .project-info {
+                padding: 20px;
+            }
+
+            .contact-section {
+                padding: 25px 20px;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .card,
+            .interaction-item {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn active" onclick="showSlide(1)">Kelompok 6</button>
+    </div>
+
+    <div class="container">
+        <!-- Slide 1: Evaluasi -->
+        <div class="slide" id="slide1">
+            <div class="header">
+                <h1>📱 Slide 1: Evaluasi Komprehensif Aplikasi Tokopedia</h1>
+                <p>Analisis Usability & User Experience</p>
+            </div>
+
+            <div class="content">
+            <!-- Section 1: Identifikasi Interface -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-number">1</div>
+                    <span>Identifikasi Jenis Interface</span>
+                </div>
+                <div class="interface-cards">
+                    <div class="card">
+                        <h3>🌐 Web UI</h3>
+                        <p>Versi desktop dapat diakses melalui browser (www.tokopedia.com)</p>
+                    </div>
+                    <div class="card">
+                        <h3>📱 GUI (Mobile App)</h3>
+                        <p>Aplikasi native untuk Android dan iOS - Platform utama mayoritas pengguna</p>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; font-style: italic; color: #666;">
+                    <strong>Fokus evaluasi:</strong> Aplikasi mobile Tokopedia sebagai platform utama pengguna Indonesia
+                </p>
+            </div>
+
+            <!-- Section 2: Data Anggota -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-number">2</div>
+                    <span>Data Anggota Kelompok</span>
+                </div>
+
+                <div class="members-grid">
+                    <!-- Member 1 -->
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <div class="avatar-circle">
+                                <span class="avatar-initial">1</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Afdhal Fauzan</h3>
+                            <p class="member-id">NIM: TI923049</p>
+                        </div>
+                    </div>
+
+                    <!-- Member 2 -->
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <div class="avatar-circle">
+                                <span class="avatar-initial">2</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Rahardian Wisnu Ardi</h3>
+                            <p class="member-id">NIM: TI923005</p>
+                        </div>
+                    </div>
+
+                    <!-- Member 3 -->
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <div class="avatar-circle">
+                                <span class="avatar-initial">3</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Roihatul Janah</h3>
+                            <p class="member-id">NIM: TI923018</p>
+                        </div>
+                    </div>
+
+                    <!-- Member 4 -->
+                    <div class="member-card">
+                        <div class="member-avatar">
+                            <div class="avatar-circle">
+                                <span class="avatar-initial">4</span>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Durrohhati Fauziyyah</h3>
+                            <p class="member-id">NIM: TI923024</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Evaluasi Usability -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-number">3</div>
+                    <span>Evaluasi Usability</span>
+                </div>
+                
+                <div class="usability-grid">
+                    <div class="usability-item">
+                        <div class="usability-header">
+                            <div class="usability-title">Learnability</div>
+                            <div class="score">4/5</div>
+                        </div>
+                        <div class="strength-weakness">
+                            <h4>Kekuatan:</h4>
+                            <ul class="strength">
+                                <li>Onboarding sederhana dengan visual jelas</li>
+                                <li>Struktur navigasi standar e-commerce</li>
+                                <li>Fitur pencarian prominent di atas</li>
+                                <li>Kategorisasi produk intuitif</li>
+                            </ul>
+                            <h4>Kelemahan:</h4>
+                            <ul class="weakness">
+                                <li>Terlalu banyak fitur di halaman utama</li>
+                                <li>Beberapa fitur tersembunyi tidak terlihat</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="usability-item">
+                        <div class="usability-header">
+                            <div class="usability-title">Efficiency</div>
+                            <div class="score">3.5/5</div>
+                        </div>
+                        <div class="strength-weakness">
+                            <h4>Kekuatan:</h4>
+                            <ul class="strength">
+                                <li>Pencarian dengan filter lengkap</li>
+                                <li>Quick access fitur populer</li>
+                                <li>Checkout process relatif cepat</li>
+                                <li>Integrasi multi payment gateway</li>
+                            </ul>
+                            <h4>Kelemahan:</h4>
+                            <ul class="weakness">
+                                <li>Halaman padat dengan banner promo</li>
+                                <li>Perlu banyak scroll untuk navigasi</li>
+                                <li>Loading time kadang lambat</li>
+                                <li>Terlalu banyak pop-up notifikasi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="usability-item">
+                        <div class="usability-header">
+                            <div class="usability-title">Memorability</div>
+                            <div class="score">4/5</div>
+                        </div>
+                        <div class="strength-weakness">
+                            <h4>Kekuatan:</h4>
+                            <ul class="strength">
+                                <li>Layout konsisten di semua halaman</li>
+                                <li>Icon dan warna brand distinctive</li>
+                                <li>Posisi tombol utama tetap konsisten</li>
+                                <li>Pattern interaksi standar</li>
+                            </ul>
+                            <h4>Kelemahan:</h4>
+                            <ul class="weakness">
+                                <li>Update sering mengubah posisi fitur</li>
+                                <li>Sulit mengingat lokasi fitur jarang dipakai</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="usability-item">
+                        <div class="usability-header">
+                            <div class="usability-title">Error Tolerance</div>
+                            <div class="score">3.5/5</div>
+                        </div>
+                        <div class="strength-weakness">
+                            <h4>Kekuatan:</h4>
+                            <ul class="strength">
+                                <li>Konfirmasi sebelum checkout</li>
+                                <li>Dapat membatalkan pesanan tertentu</li>
+                                <li>Validasi input yang jelas</li>
+                                <li>Sistem complaint dan refund terstruktur</li>
+                            </ul>
+                            <h4>Kelemahan:</h4>
+                            <ul class="weakness">
+                                <li>Tidak ada draft untuk keranjang</li>
+                                <li>Sulit membatalkan di tahap tertentu</li>
+                                <li>Pesan error tidak spesifik</li>
+                                <li>Tidak ada undo untuk beberapa aksi</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="usability-item">
+                        <div class="usability-header">
+                            <div class="usability-title">Satisfaction</div>
+                            <div class="score">4/5</div>
+                        </div>
+                        <div class="strength-weakness">
+                            <h4>Kekuatan:</h4>
+                            <ul class="strength">
+                                <li>Design modern dan atraktif</li>
+                                <li>Animasi yang smooth</li>
+                                <li>Gamification meningkatkan engagement</li>
+                                <li>Fitur lengkap dalam satu aplikasi</li>
+                            </ul>
+                            <h4>Kelemahan:</h4>
+                            <ul class="weakness">
+                                <li>Terlalu banyak distraksi notifikasi</li>
+                                <li>Iklan yang terlalu agresif</li>
+                                <li>Pengguna merasa overwhelmed</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="average-score">
+                    <h3>Rata-rata Usability Score</h3>
+                    <div class="score-display">3.8/5</div>
+                </div>
+            </div>
+
+            <!-- Section 4: Interaction Styles -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-number">4</div>
+                    <span>Analisis Interaction Style</span>
+                </div>
+                <p style="margin-bottom: 20px;">Tokopedia menggunakan kombinasi beberapa interaction style:</p>
+                
+                <div class="interaction-styles">
+                    <div class="interaction-item">
+                        <h4>👆 Direct Manipulation</h4>
+                        <p>Swipe carousel, pinch to zoom, drag map, pull to refresh</p>
+                    </div>
+                    <div class="interaction-item">
+                        <h4>📋 Menu Selection</h4>
+                        <p>Bottom navigation, dropdown kategori, tab filter, hamburger menu</p>
+                    </div>
+                    <div class="interaction-item">
+                        <h4>✍️ Form Fill-in</h4>
+                        <p>Input alamat, detail pembayaran, review produk, pencarian keyword</p>
+                    </div>
+                    <div class="interaction-item">
+                        <h4>🎤 Command Language</h4>
+                        <p>Voice search, barcode scanner untuk pencarian</p>
+                    </div>
+                    <div class="interaction-item">
+                        <h4>🤖 Natural Language (AI)</h4>
+                        <p>Chatbot customer service, query pencarian natural</p>
+                    </div>
+                </div>
+
+                <p style="margin-top: 25px; padding: 20px; background: #e7f3ff; border-radius: 10px; border-left: 4px solid #0066cc;">
+                    <strong>Interaction Style Dominan:</strong> Direct Manipulation + Menu Selection (hybrid approach yang tepat untuk mobile e-commerce)
+                </p>
+            </div>
+
+            <!-- Section 5: Usulan Perbaikan -->
+            <div class="section">
+                <div class="section-title">
+                    <div class="section-number">5</div>
+                    <span>Usulan Perbaikan UX</span>
+                </div>
+
+                <div class="improvement-cards">
+                    <!-- Perbaikan 1 -->
+                    <div class="improvement-card">
+                        <div class="improvement-header">
+                            <div class="improvement-number">1</div>
+                            <div class="improvement-title">
+                                <h3>Simplifikasi Homepage dengan Personalisasi Adaptif</h3>
+                            </div>
+                        </div>
+                        <div class="problem">
+                            <h4>🔴 Masalah:</h4>
+                            <p>Homepage terlalu padat dengan 15-20 section berbeda, menyebabkan cognitive overload.</p>
+                        </div>
+                        <div class="solution">
+                            <h4>💡 Solusi:</h4>
+                            <ul>
+                                <li>Implementasi adaptive homepage berdasarkan perilaku pengguna</li>
+                                <li>Untuk pengguna baru: tampilkan 5-6 section esensial</li>
+                                <li>Untuk pengguna aktif: prioritaskan berdasarkan histori</li>
+                                <li>Tambahkan toggle "Simplified View" di settings</li>
+                                <li>Kurangi banner promosi dari 5-7 menjadi maksimal 3</li>
+                            </ul>
+                        </div>
+                        <div class="impact">
+                            <h4>📈 Expected Impact:</h4>
+                            <p>Meningkatkan learnability dari 4 menjadi 4.5, efficiency dari 3.5 menjadi 4.2</p>
+                        </div>
+                    </div>
+
+                    <!-- Perbaikan 2 -->
+                    <div class="improvement-card">
+                        <div class="improvement-header">
+                            <div class="improvement-number">2</div>
+                            <div class="improvement-title">
+                                <h3>Smart Filter dengan Visual Preview & Quick Compare</h3>
+                            </div>
+                        </div>
+                        <div class="problem">
+                            <h4>🔴 Masalah:</h4>
+                            <p>Filtering produk memerlukan banyak klik dan sulit membandingkan produk.</p>
+                        </div>
+                        <div class="solution">
+                            <h4>💡 Solusi:</h4>
+                            <ul>
+                                <li>Visual filter chips yang sticky di bagian atas hasil pencarian</li>
+                                <li>Tambahkan preview card saat hover pada filter</li>
+                                <li>Quick Compare Mode: Long press untuk activate compare mode</li>
+                                <li>Pilih 2-4 produk untuk perbandingan side-by-side</li>
+                                <li>Tampilkan perbedaan spesifikasi secara visual</li>
+                                <li>Smart filter suggestion berdasarkan pencarian serupa</li>
+                            </ul>
+                        </div>
+                        <div class="impact">
+                            <h4>📈 Expected Impact:</h4>
+                            <p>Meningkatkan efficiency dari 3.5 menjadi 4.3, satisfaction dari 4 menjadi 4.5</p>
+                        </div>
+                    </div>
+
+                    <!-- Perbaikan 3 -->
+                    <div class="improvement-card">
+                        <div class="improvement-header">
+                            <div class="improvement-number">3</div>
+                            <div class="improvement-title">
+                                <h3>Enhanced Error Prevention & Recovery System</h3>
+                            </div>
+                        </div>
+                        <div class="problem">
+                            <h4>🔴 Masalah:</h4>
+                            <p>Kurangnya mekanisme undo dan error prevention untuk aksi penting.</p>
+                        </div>
+                        <div class="solution">
+                            <h4>💡 Solusi:</h4>
+                            <ul>
+                                <li>Smart Draft System: Auto-save keranjang belanja setiap 30 detik</li>
+                                <li>Notifikasi "Kamu punya keranjang yang belum selesai"</li>
+                                <li>Undo Functionality: Snackbar "Undo" selama 5 detik untuk aksi penting</li>
+                                <li>Archive system untuk wishlist yang dihapus (restore 30 hari)</li>
+                                <li>Pre-checkout Validation dengan summary card visual</li>
+                                <li>Intelligent Error Messages dengan solusi spesifik</li>
+                            </ul>
+                        </div>
+                        <div class="impact">
+                            <h4>📈 Expected Impact:</h4>
+                            <p>Meningkatkan error tolerance dari 3.5 menjadi 4.5, memorability dari 4 menjadi 4.3</p>
+                        </div>
+                    </div>
+
+                    <!-- Perbaikan 4 -->
+                    <div class="improvement-card">
+                        <div class="improvement-header">
+                            <div class="improvement-number">4</div>
+                            <div class="improvement-title">
+                                <h3>Contextual Notification Management</h3>
+                            </div>
+                        </div>
+                        <div class="problem">
+                            <h4>🔴 Masalah:</h4>
+                            <p>Notifikasi dan pop-up yang terlalu agresif mengganggu user flow.</p>
+                        </div>
+                        <div class="solution">
+                            <h4>💡 Solusi:</h4>
+                            <ul>
+                                <li>Smart Timing: Tampilkan promosi hanya saat idle state</li>
+                                <li>User-Controlled Frequency: Setting frekuensi notifikasi</li>
+                                <li>Contextual Relevance: Notifikasi hanya untuk kategori relevan</li>
+                                <li>Non-intrusive Promo: Ganti full-screen pop-up dengan subtle banner</li>
+                            </ul>
+                        </div>
+                        <div class="impact">
+                            <h4>📈 Expected Impact:</h4>
+                            <p>Meningkatkan satisfaction dari 4 menjadi 4.6, efficiency dari 3.5 menjadi 4.0</p>
+                        </div>
+                    </div>
+
+                    <!-- Perbaikan 5 -->
+                    <div class="improvement-card">
+                        <div class="improvement-header">
+                            <div class="improvement-number">5</div>
+                            <div class="improvement-title">
+                                <h3>Progressive Disclosure untuk Fitur Kompleks</h3>
+                            </div>
+                        </div>
+                        <div class="problem">
+                            <h4>🔴 Masalah:</h4>
+                            <p>Terlalu banyak fitur tersebar membuat aplikasi terasa kompleks.</p>
+                        </div>
+                        <div class="solution">
+                            <h4>💡 Solusi:</h4>
+                            <ul>
+                                <li>Guided Tour Interaktif untuk pengguna baru (dapat di-skip)</li>
+                                <li>Feature Discovery Tooltips yang muncul contextually</li>
+                                <li>Advanced Mode Toggle untuk power users</li>
+                                <li>Help Hints yang subtle untuk fitur jarang digunakan</li>
+                            </ul>
+                        </div>
+                        <div class="impact">
+                            <h4>📈 Expected Impact:</h4>
+                            <p>Meningkatkan learnability dari 4 menjadi 4.7, memorability dari 4 menjadi 4.4</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conclusion -->
+            <div class="conclusion">
+                <h3>📊 Kesimpulan</h3>
+                <p>Tokopedia memiliki foundation usability yang solid (3.8/5) dengan strength di learnability, memorability, dan satisfaction. Area yang perlu perbaikan utama adalah efficiency dan error tolerance.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">3.8 → 4.4</div>
+                        <div class="stat-label">Overall Usability Score</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">+20-25%</div>
+                        <div class="stat-label">Task Completion Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">-30%</div>
+                        <div class="stat-label">Time to Purchase</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">+15%</div>
+                        <div class="stat-label">User Satisfaction</div>
+                    </div>
+                </div>
+
+                <p style="margin-top: 25px; font-size: 1.1em;">
+                    Perbaikan ini sejalan dengan prinsip <strong>Human-Centered Design</strong> dan dapat meningkatkan competitive advantage Tokopedia di pasar e-commerce Indonesia yang sangat kompetitif.
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; padding: 30px 0; color: #6c757d; border-top: 2px solid #e9ecef; margin-top: 40px;">
+                <p style="font-size: 0.95em;">📱 Slide 1: Evaluasi Komprehensif Aplikasi Tokopedia</p>
+                <p style="font-size: 0.85em; margin-top: 10px;">Kelompok 6</p>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        // Slide navigation
+        function showSlide(slideNumber) {
+            const slides = document.querySelectorAll('.slide');
+            const navBtns = document.querySelectorAll('.nav-btn');
+            
+            slides.forEach((slide, index) => {
+                if (index + 1 === slideNumber) {
+                    slide.style.display = 'block';
+                    slide.style.animation = 'fadeIn 0.5s ease';
+                } else {
+                    slide.style.display = 'none';
+                }
+            });
+
+            navBtns.forEach((btn, index) => {
+                if (index + 1 === slideNumber) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Scroll to top when changing slides
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(20px)';
+                    entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                    
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('.section, .improvement-card, .usability-item').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add interactive hover effects for cards
+        document.querySelectorAll('.card, .interaction-item, .improvement-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+        });
+
+        // Print friendly function
+        window.addEventListener('beforeprint', () => {
+            document.body.style.background = 'white';
+        });
+
+        window.addEventListener('afterprint', () => {
+            document.body.style.background = 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)';
+        });
+
+        // Responsive font size adjustment
+        function adjustFontSize() {
+            const width = window.innerWidth;
+            const root = document.documentElement;
+            
+            if (width < 480) {
+                root.style.fontSize = '14px';
+            } else if (width < 768) {
+                root.style.fontSize = '15px';
+            } else {
+                root.style.fontSize = '16px';
+            }
+        }
+
+        adjustFontSize();
+        window.addEventListener('resize', adjustFontSize);
+
+        // Add loading animation
+        window.addEventListener('load', () => {
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.container').style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
